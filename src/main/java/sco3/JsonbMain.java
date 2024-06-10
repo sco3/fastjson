@@ -25,6 +25,12 @@ public class JsonbMain {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] argv) throws IOException {
+		out.println("" //
+				+ JsonbMain.class.getSimpleName() //
+				+ ": " + getProperty("java.vm.name") //
+				+ " " + getProperty("java.vendor.version") //
+		);
+
 		long start = currentTimeMillis();
 		byte[] bytes = readAllBytes(Paths.get(DEVICES_JSON));
 
