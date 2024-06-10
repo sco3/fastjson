@@ -1,0 +1,27 @@
+plugins {
+    id "java"
+}
+
+group = "sco3"
+version = "1.0.0-SNAPSHOT"
+
+compileJava {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    testImplementation "junit:junit:4.13.2"
+    //implementation 'com.alibaba.fastjson2:fastjson2:2.0.51'
+	implementation 'io.avaje:avaje-jsonb:1.11'
+}
+
+task run(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    mainClass = "sco3.TestPb"
+}
