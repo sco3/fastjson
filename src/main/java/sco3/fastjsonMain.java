@@ -8,7 +8,6 @@ import static java.lang.System.out;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -45,7 +44,7 @@ public class fastjsonMain {
 		new TreeMap<>() //
 		);
 
-		int n = 1000;
+		int n = 100;
 		for (int i = 0; i < n; i++) {
 			long singleStart = nanoTime();
 			readWrite();
