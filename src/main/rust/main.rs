@@ -1,28 +1,28 @@
 use dirs;
-
-
-use std::fs::File;
+use serde_json::Value;
+use std::fs::read_to_string;
 use std::io;
-use std::io::Read;
-
 use std::time::Instant;
 
 fn run() -> io::Result<()> {
-    let timer = Instant::now();
-    let home_dir = dirs::home_dir().ok_or(io::Error::new(
-        io::ErrorKind::NotFound,
-        "Home directory not found",
-    ))?;
-    let file_path = home_dir.join("/.local/devices.json");
-    let mut file = File::open(&file_path)?;
-    let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer)?;
-    println!("Read: {}", String::from_utf8_lossy(&buffer));
+    let home_dir = dirs::home_dir();
+    let file_path = home_dir.unwrap().join(".local/devices.json");
+    let s = read_to_string(file_path)?;
 
-    println!("Time2: {} ms", timer.elapsed().as_millis());
+    let json: Value = serde_json::from_str(&s)?;
+    let tag_name = "returnCode"; // Replace with the actual tag name
+    match json.get(tag_name) {
+        Some(value) => println!("Value for '{}': {}", tag_name, value),
+        None => println!("Tag '{}' not found in the JSON file", tag_name),
+    }
     Ok(())
 }
 
 fn main() {
-    run();
+    let timer = Instant::now();
+    let n = 1000;
+    for i in 0..n {
+        let _ = run();
+    }
+    println!("Time: {} ms", timer.elapsed().as_millis());
 }
