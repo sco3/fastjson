@@ -7,7 +7,7 @@ edition = "2018"
 
 [[bin]]
 name="rust_serde_json"
-path = "src/main/rust/main.rs"
+path = "src/main/rust/main-serde-json.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,7 +20,7 @@ serde_json = "1.0"
 
 [profile.release]
 opt-level = 3
-rustflags = ["-C", "target-cpu=native"]
+#rustflags = ["-C", "target-cpu=native"]
 
 [profile.dev]
 opt-level = 0
