@@ -19,7 +19,7 @@ func run() {
 			v, err := p.Parse(str)
 			if err == nil {
 				const field = "returnCode"
-				fmt.Printf("%s: %v\n", field, v.GetInt(field))
+				//fmt.Printf("%s: %v\n", field, v.GetInt(field))
 				v.Set(field, fastjson.MustParse("1"))
 				mod := v.String()
 				out := "/.local/devices-out-go.json"

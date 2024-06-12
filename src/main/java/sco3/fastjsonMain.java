@@ -131,8 +131,8 @@ public class fastjsonMain {
 			out.println(match);
 		}
 		out.println("" //
-				+ "Took: " + dur + " ms for " + n + " runs. (" //
-				+ 1.0 * dur / n + " ms per run )" //
+				+ "Took: " + dur + " ms for " + n + " runs. (avg " //
+				+ 1.0 * dur / n + " ms )" //
 		);
 
 		int sum = 0;
