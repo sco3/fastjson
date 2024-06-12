@@ -1,3 +1,4 @@
 cargo build 
 
-ln -sf target/release/fastjson_rust .
+
+ln -sf target/debug/rust_serde_json ./rust_serde_json_debug
