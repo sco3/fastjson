@@ -6,8 +6,12 @@ edition = "2018"
 
 
 [[bin]]
-name="rust_serde_json"
+name="rust-serde-json"
 path = "src/main/rust/main-serde-json.rs"
+
+[[bin]]
+name="rust-sonic-rs"
+path = "src/main/rust/main-sonic-rs.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -16,7 +20,7 @@ json = "0.12.4"
 dirs = "4.0"
 serde = "1.0"
 serde_json = "1.0"
-#simd-json = "0.3"
+sonic-rs = "0.3"
 
 [profile.release]
 opt-level = 3
