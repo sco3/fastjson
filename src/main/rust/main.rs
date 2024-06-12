@@ -20,8 +20,8 @@ fn run() -> io::Result<()> {
 
 fn main() {
     let timer = Instant::now();
-    let n = 1000;
-    for i in 0..n {
+    let n = 1;
+    for _i in 0..n {
         let _ = run();
     }
     println!("Time: {} ms", timer.elapsed().as_millis());
