@@ -3,7 +3,6 @@ use serde_json::from_str;
 use serde_json::Value;
 use std::fs::read_to_string;
 use std::fs::File;
-use std::io::Write;
 use std::time::Instant;
 
 fn _get_int(v: Value, s: &str) -> i64 {
@@ -25,24 +24,18 @@ fn run() {
         *rc = Value::from(1);
     }
 
-    let mut file = File::create(
-        dirs::home_dir() //
-            .unwrap()
-            .join(".local/devices-out.json"),
-    );
-    match file {
-        Ok(file) => file.write_all(json.as_bytes()),
-        Err(e) => Ok(),
-    }
+    let filename = dirs::home_dir().unwrap().join(".local/devices-out.json");
+    let mut file = File::create(filename).unwrap();
 
-    //println!("{}", v);
+    serde_json::to_writer(&mut file, &json).unwrap();
 }
 
 fn main() {
     let timer = Instant::now();
-    let n = 1000;
+    let n = 100;
     for _i in 0..n {
         let _ = run();
     }
-    println!("Time: {} ms", timer.elapsed().as_millis());
+    let took = timer.elapsed().as_millis();
+    println!("Time: {} ms avg: {}", took, took / n);
 }

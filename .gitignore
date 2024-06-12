@@ -9,3 +9,4 @@ build
 target
 fastjson_rust_release
 fastjson_rust
+src/main/go/fastjson_main
