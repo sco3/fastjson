@@ -1,4 +1,4 @@
-.classpath
+5.classpath
 .gradle
 .project
 bin
@@ -12,3 +12,9 @@ fastjson_rust
 src/main/go/fastjson_main
 rust_serde_json_debug
 rust_serde_json_release
+rust-serde-json-debug
+rust-serde-json-release
+rust-sonic-rs-debug
+rust-sonic-rs-release
+.classpath
+
