@@ -27,5 +27,5 @@ fn main() {
         let _ = run();
     }
     let took = timer.elapsed().as_millis();
-    println!("Time: {} ms avg: {}", took, took / n);
+    println!("Time: {} ms avg: {} runs: {}", took, took / n, n);
 }
