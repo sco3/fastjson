@@ -10,8 +10,8 @@ name="rust-serde-json"
 path = "src/main/rust/main-serde-json.rs"
 
 [[bin]]
-name="rust-sonic-rs"
-path = "src/main/rust/main-sonic-rs.rs"
+name="rust-simd-json"
+path = "src/main/rust/main-simd-json.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,7 +20,7 @@ json = "0.12.4"
 dirs = "4.0"
 serde = "1.0"
 serde_json = "1.0"
-sonic-rs = "0.3"
+simd-json = "0.13.10"
 
 [profile.release]
 opt-level = 3

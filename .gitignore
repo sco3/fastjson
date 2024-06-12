@@ -17,4 +17,6 @@ rust-serde-json-release
 rust-sonic-rs-debug
 rust-sonic-rs-release
 .classpath
+rust-simd-json-release
+rust-simd-json-debug
 
