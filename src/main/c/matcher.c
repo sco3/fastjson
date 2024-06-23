@@ -30,17 +30,29 @@ extern int simple_matcher(char *line, char *patterns[], int patslen) {
 	return result;
 }
 
+extern int printer2(const char **patterns, int len) {
+	for (int i = 0; i < len; i++) {
+		printf("%s \n", patterns[i]);
+	}
+	return 0;
+}
+
+extern int printer3(const char ***patterns, int len) {
+	return 0;
+}
+
 extern int triad_matcher( //
 		const char *tag0, const char *tag1, const char *tag2,  //
 		const char ***patterns, //
 		int patslen //
 		) {
+	printf("tags: %s %s %s\n", tag0, tag1, tag2);
 	int result = NOT_FOUND;
 	for (int i = 0; i < patslen; i++) {
-		char **triad = patterns[i];
+		const char **triad = patterns[i];
+		printf("triad: %s %s %s\n", triad[0], triad[1], triad[2]);
 		int triad_result = (matchPattern(tag0, triad[0])
-				&& matchPattern(tag1, triad[1])
-				&& matchPattern(tag2, triad[2]) //
+				&& matchPattern(tag1, triad[1]) && matchPattern(tag2, triad[2]) //
 		);
 		if (triad_result) {
 			result = FOUND;

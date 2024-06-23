@@ -3,7 +3,7 @@
 import os
 from sys import exit
 import ctypes
-from ctypes import c_char_p, c_int, POINTER, CDLL
+from ctypes import c_char_p, c_int, POINTER, CDLL, cast
 
 
 def __init__():
@@ -32,7 +32,7 @@ clib.matcher.restypes = c_int
 clib.matcher_ext.argtypes = [c_char_p, POINTER(c_char_p), c_int, c_char_p, c_int]
 clib.matcher_ext.restypes = c_int
 
-patterns = [b"a*", b"b*"]
+patterns = [b"a*", b"b*", b"c"]
 patterns_type = c_char_p * len(patterns)
 c_patterns = patterns_type (*patterns)
 
@@ -56,3 +56,17 @@ print (f"result = {result} matching pattern: {outstr}")
 result = clib.matcher_ext(b"csdf", c_patterns, len(c_patterns), out, outlen)
 outstr = out.decode()
 print (f"result = {result} matching pattern: {outstr}")
+
+clib.triad_matcher.argtypes = [
+    c_char_p, c_char_p, c_char_p,
+    POINTER(POINTER(c_char_p)),
+    c_int
+]
+clib.triad_matcher.restype = c_int
+
+triad = [b"a*", b"b*", b"c"]
+triad_type = c_char_p * len(triad)
+c_triad = patterns_type (*triad)
+p_triad = cast (c_triad, POINTER(POINTER(c_char_p)))
+
+clib.triad_matcher (b'1', b'2', b'3', p_triad, 1)
