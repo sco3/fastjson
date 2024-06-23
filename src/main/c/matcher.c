@@ -1,6 +1,7 @@
 #include <fnmatch.h>
 #include "matcher.h"
 #include <string.h>
+#include <stdio.h>
 
 int matchPattern(const char *str, const char *pattern) {
 	if (*pattern == '\0') {
@@ -29,9 +30,37 @@ extern int simple_matcher(char *line, char *patterns[], int patslen) {
 	return result;
 }
 
-extern int matcher(char *line, char *patterns[], int n) {
-	return matcher_ext(line, patterns, n, NULL, 0);
+extern int triad_matcher( //
+		const char *tag0, const char *tag1, const char *tag2,  //
+		const char ***patterns, //
+		int patslen //
+		) {
+	int result = NOT_FOUND;
+	for (int i = 0; i < patslen; i++) {
+		char **triad = patterns[i];
+		int triad_result = (matchPattern(tag0, triad[0])
+				&& matchPattern(tag1, triad[1])
+				&& matchPattern(tag2, triad[2]) //
+		);
+		if (triad_result) {
+			result = FOUND;
+			break;
+		}
+	}
+	return result;
+}
 
+extern int matcher(char *line, char *patterns[], int patslen) {
+	int result = NOT_FOUND;
+	for (int i = 0; i < patslen; i++) {
+		char *pattern = patterns[i];
+		int exit_code = fnmatch(pattern, line, 0);
+		if (exit_code == 0) {
+			result = FOUND;
+			break;
+		}
+	}
+	return result;
 }
 extern int matcher_ext( //
 		char *line, // string to find match
