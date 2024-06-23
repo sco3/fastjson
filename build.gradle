@@ -30,8 +30,23 @@ task run(type: JavaExec) {
 
 
 model {
+    binaries{ 
+        all {
+            cCompiler.args "-O3"
+        }
+    }
     components {
-        matcher(NativeExecutableSpec) {
+        matchermain(NativeExecutableSpec) {
+            sources {
+               c {
+                  source{
+                     srcDir "src/main/c"
+                     include "matcher*.c" 
+                  }
+               }
+            }
+        }
+        matcher(NativeLibrarySpec) {
             sources {
                c {
                   source{
@@ -43,4 +58,5 @@ model {
         }
     }
 }
+
 
