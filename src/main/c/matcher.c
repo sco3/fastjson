@@ -2,6 +2,33 @@
 #include "matcher.h"
 #include <string.h>
 
+int matchPattern(const char *str, const char *pattern) {
+	if (*pattern == '\0') {
+		return *str == '\0';
+	}
+	if (*pattern == '*') {
+		return matchPattern(str, pattern + 1)
+				|| (*str && matchPattern(str + 1, pattern));
+	}
+	if (*str && (*pattern == *str)) {
+		return matchPattern(str + 1, pattern + 1);
+	}
+	return 0;
+}
+
+extern int simple_matcher(char *line, char *patterns[], int patslen) {
+	int result = NOT_FOUND;
+	for (int i = 0; i < patslen; i++) {
+		char *pattern = patterns[i];
+		int exit_code = matchPattern(line, pattern);
+		if (exit_code == 1) {
+			result = FOUND;
+			break;
+		}
+	}
+	return result;
+}
+
 extern int matcher(char *line, char *patterns[], int n) {
 	return matcher_ext(line, patterns, n, NULL, 0);
 

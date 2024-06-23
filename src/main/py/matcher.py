@@ -5,8 +5,10 @@ from sys import exit
 import ctypes
 from ctypes import c_char_p, c_int, POINTER, CDLL
 
+
 def __init__():
     print ("init")
+
 
 lib_so = 'libmatcher.so'
 so_file = os.path.dirname (__file__) + '/' + lib_so
@@ -33,6 +35,9 @@ clib.matcher_ext.restypes = c_int
 patterns = [b"a*", b"b*"]
 patterns_type = c_char_p * len(patterns)
 c_patterns = patterns_type (*patterns)
+
+print (isinstance(c_patterns, list))
+print (isinstance(["a"], list))
 
 result = clib.matcher(b"asdf", c_patterns, len(c_patterns))
 print (f"result = {result}")
