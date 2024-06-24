@@ -46,6 +46,9 @@ for i, triad in enumerate(bufs):
     c_triad = triad_type (*triad)    
     c_triad_arr[i] = c_triad 
 
-result = clib.triad_matcher (b'asdf', b'svitch', b'front', c_triad_arr, len(c_triad_arr))
+result = clib.triad_matcher (
+    b'asdf', b'svitch', b'front',
+    c_triad_arr, len(c_triad_arr)
+)
 
 print (result)
