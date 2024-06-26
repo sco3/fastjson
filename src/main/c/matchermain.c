@@ -27,4 +27,6 @@ int main() {
 			);
 	printf("result = %d\n", triad_result);
 
+	printf("m2: %d\n", matcher_two("foobarfoobar", "fo?*barfoo*"));
+
 }

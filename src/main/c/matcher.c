@@ -1,7 +1,7 @@
 #include <fnmatch.h>
 #include "matcher.h"
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 int matchPattern(const char *str, const char *pattern) {
 	if (*pattern == '\0') {
@@ -46,11 +46,11 @@ extern int triad_matcher( //
 		const char ***patterns, //
 		int patslen //
 		) {
-	printf("tags: %s %s %s\n", tag0, tag1, tag2);
+	//printf("tags: %s %s %s\n", tag0, tag1, tag2);
 	int result = NOT_FOUND;
 	for (int i = 0; i < patslen; i++) {
 		const char **triad = patterns[i];
-		printf("triad: %s %s %s\n", triad[0], triad[1], triad[2]);
+		//printf("triad: %s %s %s\n", triad[0], triad[1], triad[2]);
 		int triad_result = (matchPattern(tag0, triad[0])
 				&& matchPattern(tag1, triad[1]) && matchPattern(tag2, triad[2]) //
 		);
@@ -103,5 +103,36 @@ extern int matcher_ext( //
 		out[0] = 0;
 	}
 	return result;
+}
+
+extern int matcher_two(char *line, char *pattern) {
+	_Bool wildcard = 0;
+	char *placeholder;
+
+	do {
+		if ((*pattern == *line) || (*pattern == '?')) {
+			line++;
+			pattern++;
+		} else if (*pattern == '*') {
+			pattern++;
+			if (*pattern == '\0')
+				return 1;
+			else {
+				placeholder = pattern;
+				wildcard = 1;
+			}
+		} else if (wildcard) {
+			if (pattern == placeholder)
+				line++;
+			else
+				pattern = placeholder;
+		} else
+			return 0;
+	} while (*line);
+
+	if (*pattern == '\0')
+		return 1;
+	else
+		return 0;
 }
 

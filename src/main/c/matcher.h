@@ -15,3 +15,5 @@ extern int triad_matcher( //
 enum {
 	NOT_FOUND = 0, FOUND = 1, NOT_ENOUGH_SPACE = 2
 };
+
+extern int matcher_two(char *line, char *pattern);
