@@ -1,27 +1,58 @@
 #include <fnmatch.h>
 #include "matcher.h"
-#include <stdio.h>
 #include <string.h>
+#include <stdio.h>
 
-int matchPattern(const char *str, const char *pattern) {
+// the matcher from standard linux glibc (libc.so.6)
+extern int glibc_match_pattern(char *line, char *pattern) {
+	int result = NOT_FOUND;
+	int exit_code = fnmatch(pattern, line, 0);
+	if (exit_code == 0) {
+		result = FOUND;
+	}
+	return result;
+}
+
+// the matcher from standard linux glibc (libc.so.6)
+extern int glibc_matcher(char *line, char *patterns[], int length) {
+	int result = NOT_FOUND;
+	for (int i = 0; i < length; i++) {
+		char *pattern = patterns[i];
+		int exit_code = fnmatch(pattern, line, 0);
+		if (exit_code == 0) {
+			result = FOUND;
+			break;
+		}
+	}
+	return result;
+}
+
+// fast version with asterisk wildcard only (*)
+// str     - string to match with pattern
+// pattern - pattern to match
+extern int match_pattern(const char *str, const char *pattern) {
 	if (*pattern == '\0') {
 		return *str == '\0';
 	}
 	if (*pattern == '*') {
-		return matchPattern(str, pattern + 1)
-				|| (*str && matchPattern(str + 1, pattern));
+		return match_pattern(str, pattern + 1)
+				|| (*str && match_pattern(str + 1, pattern));
 	}
 	if (*str && (*pattern == *str)) {
-		return matchPattern(str + 1, pattern + 1);
+		return match_pattern(str + 1, pattern + 1);
 	}
 	return 0;
 }
 
-extern int simple_matcher(char *line, char *patterns[], int patslen) {
+// fast matcher with single string to find patterns in
+// line - string for search patterns 
+// patterns - string array with patterns 
+// len - patterns array size
+extern int simple_matcher(char *line, char *patterns[], int length) {
 	int result = NOT_FOUND;
-	for (int i = 0; i < patslen; i++) {
+	for (int i = 0; i < length; i++) {
 		char *pattern = patterns[i];
-		int exit_code = matchPattern(line, pattern);
+		int exit_code = match_one(line, pattern);
 		if (exit_code == 1) {
 			result = FOUND;
 			break;
@@ -30,109 +61,36 @@ extern int simple_matcher(char *line, char *patterns[], int patslen) {
 	return result;
 }
 
-extern int printer2(const char **patterns, int len) {
-	for (int i = 0; i < len; i++) {
-		printf("%s \n", patterns[i]);
-	}
-	return 0;
-}
+extern int match_one(char *line, char *pattern) {
+	int wildcard = 0;
+	char *placeholder = NULL;
+	char *linePlaceholder = NULL;
 
-extern int printer3(const char ***patterns, int len) {
-	return 0;
-}
-
-extern int triad_matcher( //
-		const char *tag0, const char *tag1, const char *tag2,  //
-		const char ***patterns, //
-		int patslen //
-		) {
-	//printf("tags: %s %s %s\n", tag0, tag1, tag2);
-	int result = NOT_FOUND;
-	for (int i = 0; i < patslen; i++) {
-		const char **triad = patterns[i];
-		//printf("triad: %s %s %s\n", triad[0], triad[1], triad[2]);
-		int triad_result = (matchPattern(tag0, triad[0])
-				&& matchPattern(tag1, triad[1]) && matchPattern(tag2, triad[2]) //
-		);
-		if (triad_result) {
-			result = FOUND;
-			break;
-		}
-	}
-	return result;
-}
-
-extern int matcher(char *line, char *patterns[], int patslen) {
-	int result = NOT_FOUND;
-	for (int i = 0; i < patslen; i++) {
-		char *pattern = patterns[i];
-		int exit_code = fnmatch(pattern, line, 0);
-		if (exit_code == 0) {
-			result = FOUND;
-			break;
-		}
-	}
-	return result;
-}
-extern int matcher_ext( //
-		char *line, // string to find match
-		char *patterns[], int patslen, // pattern list
-		char *out, int outlen // output string for pattern
-		) {
-
-	int result = NOT_FOUND;
-	for (int i = 0; i < patslen; i++) {
-		char *pattern = patterns[i];
-		int exit_code = fnmatch(pattern, line, 0);
-		if (exit_code == 0) {
-			if (out == NULL) {
-				result = FOUND;
-			} else {
-				int len = strlen(pattern);
-				if (outlen > len) {
-					strcpy(out, pattern);
-					result = FOUND;
-				} else {
-					result = NOT_ENOUGH_SPACE;
-				}
-			}
-			break;
-		}
-	}
-	if (out != NULL && result == NOT_FOUND && outlen > 0) {
-		out[0] = 0;
-	}
-	return result;
-}
-
-extern int matcher_two(char *line, char *pattern) {
-	_Bool wildcard = 0;
-	char *placeholder;
-
-	do {
-		if ((*pattern == *line) || (*pattern == '?')) {
+	while (*line) {
+		if (*pattern == *line) {
 			line++;
 			pattern++;
 		} else if (*pattern == '*') {
 			pattern++;
-			if (*pattern == '\0')
-				return 1;
-			else {
-				placeholder = pattern;
-				wildcard = 1;
-			}
+			wildcard = 1;
+			placeholder = pattern;
+			linePlaceholder = line;
 		} else if (wildcard) {
-			if (pattern == placeholder)
-				line++;
-			else
+			if (linePlaceholder) {
+				linePlaceholder++;
+				line = linePlaceholder;
 				pattern = placeholder;
-		} else
-			return 0;
-	} while (*line);
+			} else {
+				return NOT_FOUND;
+			}
+		} else {
+			return NOT_FOUND;
+		}
+	}
 
-	if (*pattern == '\0')
-		return 1;
-	else
-		return 0;
+	while (*pattern == '*') {
+		pattern++;
+	}
+
+	return *pattern == '\0';
 }
-

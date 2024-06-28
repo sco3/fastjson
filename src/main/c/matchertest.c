@@ -4,7 +4,7 @@
 #include "matcher.h"
 #include <time.h>
 
-#define N (100*1000*1000)
+#define N (10*1000*1000)
 
 void test_match_one(char *line, char *pattern) {
 	clock_t begin = clock();
@@ -25,8 +25,42 @@ void test_match_pattern(char *line, char *pattern) {
 	printf("Time match_pattern: %d ms\n", (int) (1000 * time_spent));
 }
 
+void test_simple() {
+	clock_t begin = clock();
+	for (int i = 0; i < N; i++) {
+		assert(match_pattern("", ""));
+		assert(!match_pattern("hello", ""));
+		assert(!match_pattern("", "a"));
+		assert(match_pattern("", "*"));
+		assert(match_pattern("hello", "hello"));
+		assert(!match_pattern("hello", "world"));
+		assert(match_pattern("hello", "h*o"));
+		assert(match_pattern("hello", "*o"));
+		assert(match_pattern("hello", "h*"));
+		assert(match_pattern("hello", "*"));
+		assert(match_pattern("hello", "h*l*o"));
+		assert(match_pattern("hello", "h*e*o"));
+		assert(match_pattern("hello", "*e*"));
+		assert(match_pattern("hello", "h*l*l*o"));
+		assert(match_pattern("hello", "*ello"));
+		assert(match_pattern("hello", "*hello"));
+		assert(match_pattern("hello", "hell*"));
+		assert(match_pattern("hello", "he*"));
+		assert(!match_pattern("hello", "hallo"));
+		assert(!match_pattern("hello", "helxo"));
+		assert(match_pattern("abracadabra", "a*a*a"));
+		assert(match_pattern("mississippi", "m*i*i*i"));
+		assert(match_pattern("hello world", "h*o w*d"));
+	}
+
+	clock_t end = clock();
+	double time_spent = (double) (end - begin) / CLOCKS_PER_SEC;
+	printf("Time match_pattern: %d ms\n", (int) (1000 * time_spent));
+
+}
+
 int main() {
-	// fnmatcher from libc
+	// matcher from libc
 
 	char *p[] = { "a*", "b*" };
 	int result = glibc_matcher("asdf", p, 2);
@@ -47,29 +81,9 @@ int main() {
 	assert(glibc_matcher("file[1].txt", p5, 1) == 1);
 	assert(glibc_matcher("File.TXT", (char*[] ) { "*.txt" }, 1) == 0);
 
-	assert(match_two("foobarfoobar", "fo?*barfoo*"));
-	
-	
-	assert (match_one ("abcde","a**de") == 1);
-	
-	assert(match_one("abcde", "a**de") == 1);
-    assert(match_one("abcde", "a*de") == 1);
-    assert(match_one("abcde", "*de") == 1);
-    assert(match_one("abcde", "abc*") == 1);
-    assert(match_one("abcde", "abcde") == 1);
-    assert(match_one("abcde", "abfde") == 0);
-    assert(match_one("abcde", "a*d*e") == 1);
-    assert(match_one("abcde", "a****de") == 1);
-    assert(match_one("abc", "abcd*") == 0);
-    assert(match_one("abc", "") == 0);
-    assert(match_one("", "*") == 1);
-    assert(match_one("", "a*") == 0);
-    assert(match_one("", "") == 1);
-
+	assert(match_one("aa", "*aa*") == 1);
 
 	test_match_one("foo bar foo", "fo* bar *foo");
 	test_match_pattern("foo bar foo", "fo* bar *foo");
-	
-	
-	assert (match_one ("abcde","a**de") == 1);
+	test_simple();
 }

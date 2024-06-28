@@ -1,19 +1,9 @@
-extern int matcher(char *line, char *patterns[], int n);
-
-extern int matcher_ext( //
-		char *line, //
-		char *patterns[], int len, //
-		char *out, int outlen //
-		);
-
-extern int triad_matcher( //
-		const char *one, const char *two, const char *three,  //
-		const char ***patterns, //
-		int len //
-		);
+extern int glibc_match_pattern(char *line, char *pattern);
+extern int glibc_matcher(char *line, char *patterns[], int n);
+extern int match_pattern(const char *str, const char *pattern);
+extern int simple_matcher(char *line, char *patterns[], int length);
+extern int match_one(char *line, char *pattern);
 
 enum {
-	NOT_FOUND = 0, FOUND = 1, NOT_ENOUGH_SPACE = 2
+	NOT_FOUND = 0, FOUND = 1
 };
-
-extern int matcher_two(char *line, char *pattern);

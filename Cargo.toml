@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["scorta <scorta@gmail.com>"]
 edition = "2018"
 
+[[bin]]
+name="rust-fn-macher"
+path="src/main/rust/match_pattern.rs"
 
 [[bin]]
 name="rust-serde-json"
@@ -21,6 +24,8 @@ dirs = "4.0"
 serde = "1.0"
 serde_json = "1.0"
 simd-json = "0.13.10"
+glob = "0.3"
+criterion = "0.3"
 
 [profile.release]
 opt-level = 3
